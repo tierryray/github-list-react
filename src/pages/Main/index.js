@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
+import { FaGithubAlt, FaPlus, FaSpinner, FaInfoCircle } from 'react-icons/fa';
 
 import { Link } from 'react-router-dom';
 
@@ -90,7 +90,7 @@ export default class Main extends Component {
             <li key={repository.name}>
               <span>{repository.name}</span>
               <Link to={`/repository/${encodeURIComponent(repository.name)}`}>
-                Detalhes
+                <FaInfoCircle color="#7159c1" size={20} />
               </Link>
             </li>
           ))}
