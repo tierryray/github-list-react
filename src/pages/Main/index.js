@@ -47,6 +47,14 @@ export default class Main extends Component {
 
       const { newRepo, repositories } = this.state;
 
+      const repoExists = repositories.filter(
+        repository => repository.name !== newRepo
+      );
+
+      if (repoExists) {
+        throw new Error('Repositório Duplicado!');
+      }
+
       const response = await api.get(`/repos/${newRepo}`);
 
       const data = {
