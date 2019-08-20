@@ -2,7 +2,7 @@
 /* eslint-disable react/static-property-placement */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { FaSpinner } from 'react-icons/fa';
+import { FaSpinner, FaArrowLeft } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import api from '../../services/api';
 
@@ -36,7 +36,6 @@ export default class Repository extends Component {
       api.get(`/repos/${repoName}/issues`, {
         params: {
           state: 'all',
-          per_page: 5,
         },
       }),
     ]);
@@ -105,7 +104,10 @@ export default class Repository extends Component {
     return (
       <Container>
         <Owner>
-          <Link to="/">Voltar aos repositórios</Link>
+          <Link to="/">
+            <FaArrowLeft color="#7159c1" size={18} />
+            Voltar
+          </Link>
           <img src={repository.owner.avatar_url} alt={repository.owner.login} />
           <h1>{repository.name}</h1>
           <p>{repository.description}</p>

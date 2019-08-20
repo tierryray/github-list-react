@@ -16,9 +16,29 @@ export const Owner = styled.header`
   align-items: center;
 
   a {
+    display: flex;
+    align-self: flex-start;
+    background: transparent;
     color: #7159c1;
     font-size: 16px;
+    margin: 0;
+    padding: 10px;
     text-decoration: none;
+    border-radius: 4px;
+    transition: 0.2s;
+
+    &:hover {
+      background: #7159c1;
+      color: #fff;
+
+      svg {
+        fill: #fff;
+      }
+    }
+
+    svg {
+      margin-right: 10px;
+    }
   }
 
   img {
