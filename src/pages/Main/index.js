@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { toast } from 'react-toastify';
+
 import { FaGithubAlt, FaPlus, FaSpinner, FaInfoCircle } from 'react-icons/fa';
 
 import { Link } from 'react-router-dom';
@@ -47,12 +49,12 @@ export default class Main extends Component {
 
       const { newRepo, repositories } = this.state;
 
-      const repoExists = repositories.filter(
-        repository => repository.name !== newRepo
+      const repoExists = repositories.find(
+        repository => repository.name === newRepo
       );
 
       if (repoExists) {
-        throw new Error('Repositório Duplicado!');
+        throw new Error('REPO_DUPLICATE');
       }
 
       const response = await api.get(`/repos/${newRepo}`);
@@ -67,7 +69,21 @@ export default class Main extends Component {
         loading: false,
         repoNotFound: false,
       });
-    } catch {
+
+      toast.success('✅ Repositório adicionado com sucesso!', {
+        position: toast.POSITION.BOTTOM_CENTER,
+      });
+    } catch (err) {
+      if (err.message === 'REPO_DUPLICATE') {
+        toast.error('❌ Repositório duplicado!', {
+          position: toast.POSITION.BOTTOM_CENTER,
+        });
+      } else {
+        toast.error('❌ Repositório não encontrado!', {
+          position: toast.POSITION.BOTTOM_CENTER,
+        });
+      }
+
       this.setState({
         repoNotFound: true,
         loading: false,
