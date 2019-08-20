@@ -118,12 +118,6 @@ export const State = styled.div`
     text-decoration: none;
     color: #7159c1;
     font-size: 16px;
-    transition: 0.2s;
-
-    &:hover {
-      background-color: #7159c1;
-      color: #fff;
-    }
 
     &:focus {
       background-color: #7159c1;
