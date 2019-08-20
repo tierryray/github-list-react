@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-autofocus */
 /* eslint-disable react/static-property-placement */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -7,7 +8,7 @@ import api from '../../services/api';
 
 import Container from '../../components/Container';
 import Loading from '../../components/Loading';
-import { Owner, IssueList } from './styles';
+import { Owner, State, IssueList } from './styles';
 
 export default class Repository extends Component {
   static propTypes = {
@@ -22,6 +23,7 @@ export default class Repository extends Component {
     repository: {},
     issues: [],
     loading: true,
+    filter: 'all',
   };
 
   async componentDidMount() {
@@ -33,7 +35,7 @@ export default class Repository extends Component {
       api.get(`/repos/${repoName}`),
       api.get(`/repos/${repoName}/issues`, {
         params: {
-          state: 'open',
+          state: 'all',
           per_page: 5,
         },
       }),
@@ -45,6 +47,49 @@ export default class Repository extends Component {
       loading: false,
     });
   }
+
+  componentDidUpdate(_, prevState) {
+    const { filter } = this.state;
+    if (prevState.filter !== filter) {
+      this.fetchIssues();
+    }
+  }
+
+  fetchIssues = async () => {
+    const { match } = this.props;
+    const { filter } = this.state;
+
+    const repoName = decodeURIComponent(match.params.repository);
+
+    const issues = await api.get(`/repos/${repoName}/issues`, {
+      params: {
+        state: filter,
+        per_page: 5,
+      },
+    });
+
+    this.setState({
+      issues: issues.data,
+    });
+  };
+
+  handleListAllRepositories = () => {
+    this.setState({
+      filter: 'all',
+    });
+  };
+
+  handleListOpenRepositories = () => {
+    this.setState({
+      filter: 'open',
+    });
+  };
+
+  handleListClosedRepositories = () => {
+    this.setState({
+      filter: 'closed',
+    });
+  };
 
   render() {
     const { repository, issues, loading } = this.state;
@@ -65,6 +110,22 @@ export default class Repository extends Component {
           <h1>{repository.name}</h1>
           <p>{repository.description}</p>
         </Owner>
+
+        <State>
+          <button
+            type="button"
+            onClick={this.handleListAllRepositories}
+            autoFocus="true"
+          >
+            Todos
+          </button>
+          <button type="button" onClick={this.handleListOpenRepositories}>
+            Abertos
+          </button>
+          <button type="button" onClick={this.handleListClosedRepositories}>
+            Fechados
+          </button>
+        </State>
 
         <IssueList>
           {issues.map(issue => (

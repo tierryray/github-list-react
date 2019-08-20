@@ -101,3 +101,37 @@ export const IssueList = styled.ul`
     }
   }
 `;
+
+export const State = styled.div`
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  justify-content: center;
+  margin-top: 30px;
+
+  button {
+    margin: 0;
+    background: transparent;
+    border: 1px solid #7159c1;
+    border-radius: 4px;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #7159c1;
+    font-size: 16px;
+    transition: 0.2s;
+
+    &:hover {
+      background-color: #7159c1;
+      color: #fff;
+    }
+
+    &:focus {
+      background-color: #7159c1;
+      color: #fff;
+    }
+
+    & + button {
+      margin-left: 20px;
+    }
+  }
+`;
