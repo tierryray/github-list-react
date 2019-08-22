@@ -38,6 +38,7 @@ export const Owner = styled.header`
 
     svg {
       margin-right: 10px;
+      transition: 0.2s;
     }
   }
 
@@ -129,6 +130,11 @@ export const State = styled.div`
   justify-content: center;
   margin-top: 30px;
 
+  .active {
+    background-color: #7159c1;
+    color: #fff;
+  }
+
   button {
     margin: 0;
     background: transparent;
@@ -139,13 +145,26 @@ export const State = styled.div`
     color: #7159c1;
     font-size: 16px;
 
-    &:focus {
-      background-color: #7159c1;
-      color: #fff;
-    }
-
     & + button {
       margin-left: 20px;
     }
+  }
+`;
+
+export const Pagination = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+export const PaginationButton = styled.button`
+  margin: 10px;
+  padding: 0;
+  border: none;
+  background: transparent;
+
+  &[disabled] {
+    opacity: 0.5;
   }
 `;

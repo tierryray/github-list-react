@@ -2,13 +2,24 @@
 /* eslint-disable react/static-property-placement */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { FaSpinner, FaArrowLeft } from 'react-icons/fa';
+import {
+  FaSpinner,
+  FaArrowLeft,
+  FaArrowCircleLeft,
+  FaArrowCircleRight,
+} from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
 import Loading from '../../components/Loading';
-import { Owner, State, IssueList } from './styles';
+import {
+  Owner,
+  State,
+  IssueList,
+  Pagination,
+  PaginationButton,
+} from './styles';
 
 export default class Repository extends Component {
   static propTypes = {
@@ -24,6 +35,7 @@ export default class Repository extends Component {
     issues: [],
     loading: true,
     filter: 'all',
+    page: 1,
   };
 
   async componentDidMount() {
@@ -36,6 +48,7 @@ export default class Repository extends Component {
       api.get(`/repos/${repoName}/issues`, {
         params: {
           state: 'all',
+          page: 1,
         },
       }),
     ]);
@@ -48,22 +61,22 @@ export default class Repository extends Component {
   }
 
   componentDidUpdate(_, prevState) {
-    const { filter } = this.state;
-    if (prevState.filter !== filter) {
+    const { filter, page } = this.state;
+    if (prevState.filter !== filter || prevState.page !== page) {
       this.fetchIssues();
     }
   }
 
   fetchIssues = async () => {
     const { match } = this.props;
-    const { filter } = this.state;
+    const { filter, page } = this.state;
 
     const repoName = decodeURIComponent(match.params.repository);
 
     const issues = await api.get(`/repos/${repoName}/issues`, {
       params: {
         state: filter,
-        per_page: 5,
+        page,
       },
     });
 
@@ -91,7 +104,7 @@ export default class Repository extends Component {
   };
 
   render() {
-    const { repository, issues, loading } = this.state;
+    const { repository, issues, loading, page, filter } = this.state;
 
     if (loading) {
       return (
@@ -117,14 +130,22 @@ export default class Repository extends Component {
           <button
             type="button"
             onClick={this.handleListAllRepositories}
-            autoFocus="true"
-          >
+            className={filter === 'all' &&
+            'active'}>
             Todos
           </button>
-          <button type="button" onClick={this.handleListOpenRepositories}>
+          <button
+            type="button"
+            onClick={this.handleListOpenRepositories}
+            className={filter === 'open' &&
+            'active'}>
             Abertos
           </button>
-          <button type="button" onClick={this.handleListClosedRepositories}>
+          <button
+            type="button"
+            onClick={this.handleListClosedRepositories}
+            className={filter === 'closed' &&
+            'active'}>
             Fechados
           </button>
         </State>
@@ -145,6 +166,22 @@ export default class Repository extends Component {
             </li>
           ))}
         </IssueList>
+        <Pagination>
+          <PaginationButton
+            type="button"
+            onClick={() => this.setState({ page: page - 1 })}
+            disabled={page === 1}
+          >
+            <FaArrowCircleLeft color="#7159c1" size={30} />
+          </PaginationButton>
+          <strong>Página {page}</strong>
+          <PaginationButton
+            type="button"
+            onClick={() => this.setState({ page: page + 1 })}
+          >
+            <FaArrowCircleRight color="#7159c1" size={30} />
+          </PaginationButton>
+        </Pagination>
       </Container>
     );
   }
